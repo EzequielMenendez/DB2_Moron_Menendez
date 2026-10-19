@@ -1,0 +1,18 @@
+# Entornos y secretos
+.env
+.env.local
+*.local
+
+# Dependencias
+node_modules/
+
+# Respaldos de base de datos (pueden contener datos reales)
+db/backups/
+*.dump
+
+# Logs
+*.log
+
+# Sistema
+Thumbs.db
+.DS_Store
