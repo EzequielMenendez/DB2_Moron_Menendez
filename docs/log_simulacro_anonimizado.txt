@@ -1,0 +1,7 @@
+2026-10-27 12:10:00.100 -03 [9999] LOG:  statement: SELECT fn_autenticar('atacante_anon@mail.com', '***');
+2026-10-27 12:10:02.200 -03 [9999] LOG:  statement: SELECT fn_autenticar('atacante_anon@mail.com', '***');
+2026-10-27 12:10:04.300 -03 [9999] LOG:  statement: SELECT fn_autenticar('atacante_anon@mail.com', '***');
+2026-10-27 12:10:15.500 -03 [9999] LOG:  statement: SELECT fn_autenticar('cliente_legitimo@mail.com', '***');
+2026-10-27 12:10:20.800 -03 [9999] LOG:  statement: SELECT * FROM cliente LIMIT 500;
+2026-10-27 12:10:35.900 -03 [9999] LOG:  statement: GRANT admin_datos TO rol_app_lectura;
+2026-10-27 12:10:35.905 -03 [9999] ERROR:  permission denied for role "admin_datos"
