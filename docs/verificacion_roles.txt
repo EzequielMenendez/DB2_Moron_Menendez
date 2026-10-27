@@ -1,0 +1,19 @@
+-- =====================================================================
+-- Verificación de Roles y Privilegios — Parte A (Food Store)
+-- Salida de \du y information_schema.role_table_grants
+-- =====================================================================
+
+-- 1. Listado de roles del sistema (\du equivalente)
+\du
+
+-- 2. Privilegios concedidos a nivel de tablas
+SELECT grantee, table_name, privilege_type
+FROM information_schema.role_table_grants
+WHERE table_schema = 'public'
+ORDER BY grantee, table_name, privilege_type;
+
+-- 3. Privilegios a nivel de columnas (ej. rol_soporte sobre cliente)
+SELECT grantee, table_name, column_name, privilege_type
+FROM information_schema.column_privileges
+WHERE table_schema = 'public'
+ORDER BY grantee, table_name, column_name, privilege_type;
