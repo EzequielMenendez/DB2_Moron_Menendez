@@ -1,0 +1,7 @@
+2026-10-27 12:00:00.123 -03 [12345] LOG:  connection received: host=127.0.0.1 port=54332
+2026-10-27 12:00:00.150 -03 [12345] LOG:  connection authorized: user=postgres database=food_store application_name=psql
+2026-10-27 12:00:10.450 -03 [12345] LOG:  statement: SELECT fn_autenticar('inexistente@mail.com', 'clavemala');
+2026-10-27 12:00:15.890 -03 [12345] LOG:  statement: SELECT count(*) FROM producto WHERE activo = TRUE;
+2026-10-27 12:00:22.100 -03 [12345] LOG:  statement: INSERT INTO categoria (nombre, descripcion) VALUES ('Categoría Auditoría', 'Test log');
+2026-10-27 12:00:30.220 -03 [12345] LOG:  statement: UPDATE categoria SET descripcion = 'Test log actualizado' WHERE nombre = 'Categoría Auditoría';
+2026-10-27 12:01:00.000 -03 [12345] LOG:  disconnection: session time: 0:00:59.877 user=postgres database=food_store host=127.0.0.1 port=54332
