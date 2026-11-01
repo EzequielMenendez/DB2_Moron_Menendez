@@ -97,7 +97,7 @@ La evidencia detallada distingue comprobaciones en PostgreSQL, SQLite y revisió
 
 ## 5. Trazabilidad, uso de IA y defensa
 
-Los archivos `docs/kiro/requirements.md`, `design.md` y `tasks.md` describen los requisitos y el diseño del TP8. Los cuatro requisitos EARS relacionan el comportamiento con los casos de aceptación. Su existencia no equivale a haber ejecutado Kiro: se prepararon como archivos del proyecto mediante Codex.
+Los archivos `docs/kiro/requirements.md`, `design.md` y `tasks.md` describen los requisitos y el diseño del TP8. Los cuatro requisitos EARS relacionan el comportamiento con los casos de aceptación. Se prepararon mediante Codex, sin acreditar uso de Kiro. A pedido del usuario se agregó `docs/kiro/simulacion_kiro.md`: reconstrucción documental posterior a la implementación, con prompt y respuestas simuladas; no acredita sesión real ni planificación previa en Kiro.
 
 La implementación usa SQLite y Python estándar para reproducir la simulación y ejecutar pruebas; no necesita aplicación móvil, interfaz ni conexión continua. `docs/evidencia_tdd.md` conserva el ciclo de pruebas. El resultado de cada caso y sus límites se consulta en los documentos de evidencia, no se infiere de una captura.
 

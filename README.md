@@ -15,7 +15,7 @@ TP8 agrega la base de una tablet sin conexión y una **simulación** de sincroni
 - `movil/simulador.py`, `tests/`: reproducción sin paquetes Python externos.
 - `movil/servidor_pruebas.sql`, `snapshot_postgresql.sql`: fixture mínima y vista del contrato móvil.
 - `docs/informe.pdf`: informe de TP8; fuente editable `docs/informe_tp8.md`.
-- `docs/kiro/`: cuatro requisitos EARS, diseño y tareas.
+- `docs/kiro/`: cuatro requisitos EARS, diseño y tareas; [simulación documental del flujo Specs](docs/kiro/simulacion_kiro.md), reconstruida por Codex después de implementar.
 - `docs/evidencia_*.md`, `bitacora_ia.md`, `DUIA.md`, `defensa_tp8.md`: resultados, alcance y preparación de la defensa.
 
 ## 1. Requisitos y comprobación de versión
@@ -104,9 +104,9 @@ El esquema `tp8_servidor` se crea una sola vez: si ya existe, la fixture falla y
 
 La revisión TP8 detectó problemas en scripts históricos, entre ellos credenciales literales y autenticación de demostración que ignora la contraseña. **No ejecutar automáticamente los scripts de unidades anteriores**. Se conservaron como referencia y los hallazgos quedan documentados para una corrección separada; el paquete TP8 no necesita esos scripts para funcionar.
 
-La asistencia real fue **Codex**. Los archivos de especificación están preparados, pero no se declara una ejecución de Kiro ni de OpenCode Plan. Antes de entregar, el equipo debe realizar esos pasos pedidos por la consigna, revisar y reproducir los resultados, completar la DUIA oficial si tiene un formato obligatorio y efectuar la defensa personal. No se inventan firmas ni validaciones humanas.
+La asistencia real fue **Codex**. Los archivos de especificación están preparados y se agregó una simulación documental posterior del flujo Specs; esta no equivale a una sesión real de Kiro ni de OpenCode Plan. Antes de entregar, el equipo debe realizar esos pasos pedidos por la consigna, revisar y reproducir los resultados, completar la DUIA oficial si tiene un formato obligatorio y efectuar la defensa personal. No se inventan firmas ni validaciones humanas.
 
-El ZIP de TP8 se puede entregar sin publicar el repositorio. Esta preparación no incluye push, etiqueta remota ni entrega en campus.
+El ZIP de TP8 se puede entregar sin publicar el repositorio. La rama `sqlite` ya fue publicada por pedido del usuario; esta actualización documental debe publicarse por separado. No se creó una etiqueta `tp8` ni se realizó la entrega en campus.
 
 ## Referencia anterior: Unidades 4–7
 

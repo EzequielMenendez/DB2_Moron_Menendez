@@ -11,6 +11,8 @@ Se utilizó **Codex** para leer la consigna y el repositorio de referencia en la
 
 No se declara ejecución en Kiro ni en el agente Plan de OpenCode: esa actividad está pendiente y debe agregarse únicamente cuando ocurra. Las especificaciones en `docs/kiro/` son archivos preparatorios; no acreditan el uso de esa herramienta.
 
+También se utilizó Codex, después de implementar el TP8 y a pedido del usuario, para reconstruir una simulación documental del flujo Specs en `docs/kiro/simulacion_kiro.md`. Incluye un prompt propuesto y respuestas expresamente simuladas; no es una transcripción real ni acredita planificación en Kiro anterior al código. Se contrastó con archivos y evidencias existentes, sin realizar nuevas pruebas en esa simulación.
+
 ## Responsabilidad del equipo
 
 El equipo debe revisar personalmente el código y las evidencias, reproducir los casos y poder defender las decisiones. Las pruebas realizadas por la asistencia no sustituyen esa revisión ni el ensayo individual. No se presenta este texto como una declaración ya firmada por los integrantes.
