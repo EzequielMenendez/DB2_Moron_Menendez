@@ -16,3 +16,8 @@ db/backups/
 # Sistema
 Thumbs.db
 .DS_Store
+
+# Artefactos Python de pruebas
+__pycache__/
+*.pyc
+movil/tmp/
