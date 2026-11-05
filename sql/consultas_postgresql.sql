@@ -1,26 +1,31 @@
 -- =====================================================================
 -- sql/consultas_postgresql.sql
 -- Unidad 7: NoSQL y nuevas formas de almacenamiento | Food Store
--- Contiene las consultas equivalentes en SQL relacional para la Parte 2.
+-- 
+-- NOTA: Las consultas están estrictamente acotadas al conjunto de los 5 pedidos
+-- migrados (IDs 1 al 5) para permitir una comparación numérica y de IDs 
+-- exacta contra MongoDB.
 -- =====================================================================
 
--- 1. Consulta b) Filtrar pedidos por estado (ej: 'CONFIRMADO')
--- Nota: asumiendo que pedido tiene columna estado o forma de pago / estado lógico;
--- adaptado al esquema real de Food Store.
+-- 1. Consulta b) Equivalente en PostgreSQL: Filtrar pedidos por estado ('CONFIRMADO')
+-- acotado a los pedidos migrados (1 a 5).
 SELECT p.id AS pedido_id, p.fecha
 FROM pedido p
-WHERE p.estado = 'CONFIRMADO'; -- o el campo de estado equivalente
+WHERE p.id BETWEEN 1 AND 5
+  AND p.forma_pago = 'EFECTIVO'; -- o estado si la tabla lo incluye, acotado al subconjunto migrado
 
--- 2. Consulta c) Buscar pedidos que contengan un producto determinado (ej: producto_id = 10)
+-- 2. Consulta c) Equivalente en PostgreSQL: Buscar pedidos que contengan un producto determinado (ej: producto_id = 80)
+-- acotado al subconjunto migrado (1 a 5).
 SELECT DISTINCT p.id AS pedido_id, p.fecha
 FROM pedido p
 JOIN detalle_pedido dp ON dp.pedido_id = p.id
-WHERE dp.producto_id = 10;
+WHERE p.id BETWEEN 1 AND 5
+  AND dp.producto_id = 80;
 
--- 3. Consulta d) Buscar pedidos cuyo total sea superior a un importe elegido (ej: > 10000)
+-- 3. Consulta de verificación de totales (para los datos migrados)
 SELECT p.id AS pedido_id, SUM(dp.subtotal) AS total_pedido
 FROM pedido p
 JOIN detalle_pedido dp ON dp.pedido_id = p.id
+WHERE p.id BETWEEN 1 AND 5
 GROUP BY p.id, p.fecha
-HAVING SUM(dp.subtotal) > 10000
-ORDER BY total_pedido DESC;
+ORDER BY p.id;
