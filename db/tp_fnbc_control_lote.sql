@@ -149,8 +149,8 @@ FROM (
 --        es {ResponsableControlID, DepositoID}, que no contiene LoteID, luego
 --        no determina la relación completa.  ->  FD2 VIOLA la FNBC.
 --
--- Conclusión: control_lote_almacen NO está en FNBC (y por lo tanto tampoco
--- en 3FN, aunque aquí el criterio aplicado es el de FNBC).
+-- Conclusión: control_lote_almacen NO está en FNBC (nota: al ser sus tres
+-- atributos primos, la relación sí cumple 3FN, pero viola FNBC por FD2).
 -- =====================================================================
 
 -- Prueba automática de que el determinante de FD2 no es superclave:
@@ -192,7 +192,8 @@ BEGIN
 END $$;
 
 -- =====================================================================
--- (e) Descomposición sin pérdida (algoritmo de FNBC)
+-- (e) Descomposición sin pérdida (algoritmo de FNBC) y migración en
+--     transacción reversible
 --
 -- Determinante violatorio: {ResponsableControlID}.
 -- Paso 1: separar una relación que contenga el determinante violatorio y los
@@ -201,8 +202,13 @@ END $$;
 -- Paso 2: el resto de los atributos forman:
 --             R1(LoteID, ResponsableControlID)          -- clave: (LoteID, ResponsableControlID)
 --
--- Script SQL de las tablas resultantes:
+-- Se ejecuta el DDL, la migración de datos y la validación sin pérdida
+-- dentro de una transacción explícita (BEGIN ... COMMIT). Si cualquier
+-- validación de conteo o de diferencia (EXCEPT) detectara pérdida o tuplas
+-- espurias, se aborta con excepción y PostgreSQL revierte la transacción.
 -- =====================================================================
+BEGIN;
+
 DROP TABLE IF EXISTS control_lote_responsable CASCADE;
 DROP TABLE IF EXISTS responsable_deposito CASCADE;
 
@@ -256,6 +262,29 @@ FROM control_lote_responsable r1
 NATURAL JOIN responsable_deposito r2;
 
 -- ---------------------------------------------------------------------
+-- Verificación automática en vuelo dentro de la transacción:
+-- si hubiera diferencias, lanza RAISE EXCEPTION y fuerza ROLLBACK.
+-- ---------------------------------------------------------------------
+DO $$
+DECLARE
+    v_diff BIGINT;
+BEGIN
+    SELECT count(*) INTO v_diff FROM (
+        (SELECT lote_id, deposito_id, responsable_control_id FROM control_lote_almacen
+         EXCEPT
+         SELECT lote_id, deposito_id, responsable_control_id FROM v_control_lote_almacen_compat)
+        UNION ALL
+        (SELECT lote_id, deposito_id, responsable_control_id FROM v_control_lote_almacen_compat
+         EXCEPT
+         SELECT lote_id, deposito_id, responsable_control_id FROM control_lote_almacen)
+    ) diff;
+
+    IF v_diff > 0 THEN
+        RAISE EXCEPTION 'Migración abortada: se detectaron % diferencias entre el esquema original y la descomposición FNBC', v_diff;
+    END IF;
+END $$;
+
+-- ---------------------------------------------------------------------
 -- Verificación de la equivalencia: la vista debe devolver exactamente
 -- las 3 filas originales. Se comprueba en ambos sentidos (EXCEPT vacío).
 -- ---------------------------------------------------------------------
@@ -278,3 +307,35 @@ SELECT 'vista MENOS original', count(*) FROM (
 
 -- Contenido final de la vista (debe ser idéntico a la instancia de ejemplo)
 SELECT * FROM v_control_lote_almacen_compat ORDER BY lote_id;
+
+COMMIT;
+
+-- =====================================================================
+-- (g) Plan de reversión obligatorio (ensayado en transacción reversible)
+--
+-- Si se requiere revertir la refactorización FNBC y volver al esquema
+-- heredado `control_lote_almacen`:
+--   1. Durante la migración en curso: ejecutar `ROLLBACK;` antes del COMMIT.
+--   2. Post-migración: reconstruir e insertar todas las filas en
+--      `control_lote_almacen` a partir de la reunión natural R1 ⋈ R2
+--      (`v_control_lote_almacen_compat`), verificar 0 diferencias y eliminar
+--      la vista y las tablas R1/R2.
+-- A continuación se prueba el procedimiento de reversión dentro de una
+-- transacción con ROLLBACK final para demostrar su funcionamiento sin
+-- destruir el estado FNBC migrado.
+-- =====================================================================
+BEGIN;
+    TRUNCATE TABLE control_lote_almacen;
+
+    INSERT INTO control_lote_almacen (lote_id, deposito_id, responsable_control_id)
+    SELECT lote_id, deposito_id, responsable_control_id
+    FROM v_control_lote_almacen_compat;
+
+    SELECT 'filas restauradas en control_lote_almacen (ensayo de reversión)' AS paso,
+           count(*) AS filas
+    FROM control_lote_almacen;
+
+    DROP VIEW v_control_lote_almacen_compat;
+    DROP TABLE control_lote_responsable;
+    DROP TABLE responsable_deposito;
+ROLLBACK;

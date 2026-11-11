@@ -118,6 +118,14 @@ ni pérdida de información.
      503 |           31 |                    802
 ```
 
+### (g) Transacción reversible y plan de reversión obligatorio
+
+La migración hacia `control_lote_responsable` (R1) y `responsable_deposito` (R2) se ejecuta dentro de una transacción explícita (`BEGIN ... COMMIT`), con una verificación automática mediante bloque `DO $$` que compara la tabla original con `v_control_lote_almacen_compat` usando `EXCEPT` en ambos sentidos; si existiera cualquier diferencia (`v_diff > 0`), lanza `RAISE EXCEPTION` y aborta automáticamente toda la transacción.
+
+**Plan de reversión documentado y probado:**
+1. **En vuelo (antes del `COMMIT`):** ejecutar `ROLLBACK;` revierte el DDL y las inserciones de forma atómica.
+2. **Post-migración:** dado que la descomposición es una unión sin pérdida (`R1 ⋈ R2 = R`), se reconstruye el contenido íntegro de `control_lote_almacen` insertando desde `v_control_lote_almacen_compat`, se comprueba la igualdad de filas y se eliminan `v_control_lote_almacen_compat`, `control_lote_responsable` y `responsable_deposito`. Este procedimiento se ensaya al final de `db/tp_fnbc_control_lote.sql` dentro de un bloque `BEGIN ... ROLLBACK`.
+
 ---
 
 ## Parte 2 — Desnormalización controlada del reporte Top-5 categorías del día

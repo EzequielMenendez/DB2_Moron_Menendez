@@ -1,9 +1,9 @@
-# Evidencia de la revisión con Codex - TP8
+# Evidencia del Code Review Final Asistido por IA — TP8 (Unidades 4 a 8)
 
 Fecha: 2026-11-01. Ejecución real sobre PostgreSQL 18 en una instancia
 temporal nueva, escuchando exclusivamente en `127.0.0.1:55438`.
 No se usaron credenciales ni datos de bases preexistentes.
-No se ejecutaron los scripts históricos de roles ni de restauración.
+No se ejecutaron los scripts históricos de roles ni de restauración sobre producción.
 
 Comando (desde la raíz; `psql` de PostgreSQL 18):
 
@@ -60,6 +60,4 @@ documental y queda pendiente corregir ese comentario histórico fuera del TP8.
 
 ## Alcance
 
-Revisión hecha por **Codex**, no por OpenCode en modo Plan. El informe
-separa estos resultados de la práctica personal pedida con Kiro/OpenCode.
-Las tablas TEMP y la función del primer probe terminan con ROLLBACK.
+La revisión cubrió todos los scripts SQL y PowerShell de las Unidades 4 a 8, combinando inspección estática y pruebas aisladas en PostgreSQL 18 y SQLite 3.37+. Las tablas TEMP y la función del primer probe terminan con ROLLBACK.

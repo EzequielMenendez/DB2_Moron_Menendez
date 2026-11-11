@@ -1,113 +1,87 @@
-# DB2 · Food Store · TP8 · rama sqlite
+# Food Store — Base de Datos II (UTN · 2026)
+## Segunda Entrega Parcial del Trabajo Práctico Integrador (Unidades 4 a 8)
 
-Equipo: Moron / Menendez · Base de Datos II · UTN · 2026.
+**Equipo:** Morón / Menéndez
+**Organización de ramas del proyecto:**
+- `main`: Unidades 4, 5 y 6 (Normalización avanzada FNBC y desnormalización, Administración y seguridad, Mantenimiento y recuperación).
+- `NoSQL`: Unidad 7 (Modelado documental en MongoDB y comparación práctica con PostgreSQL).
+- `sqlite` *(rama actual e integradora)*: Unidad 8 (Base móvil SQLite offline, sincronización con resolución de conflictos, code review final de los scripts de la cursada e integración completa de las Unidades 4 a 8).
 
-TP8 agrega la base de una tablet sin conexión y una **simulación** de sincronización. Se desarrolló desde la rama `NoSQL`, conservando las unidades 4–7. La tablet guarda borradores; **SIMULADO_APROBADO no confirma ventas ni reserva stock**.
+---
 
-## Entrega
+## 📋 Mapa de Cumplimiento de la Segunda Entrega (Unidades 4 a 8)
 
-- `movil/schema_sqlite.sql`: tablas STRICT, restricciones y claves foráneas.
-- `movil/pruebas_sqlite.sql`: COMMIT, ROLLBACK, C1 y errores esperados C7.
-- `movil/semaforo.sql`: rojo antes que amarillo; procesa solo PENDIENTE.
-- `movil/cargar_cache.sql`: recarga de catálogo con conversión `t/f` y lápidas.
-- `movil/servidor_snapshot.csv`, `snapshots/`: exportaciones reales de un PostgreSQL de pruebas con datos inventados.
-- `movil/foodstore_movil.db`: ejemplo con catálogo sintético y un borrador pendiente.
-- `movil/simulador.py`, `tests/`: reproducción sin paquetes Python externos.
-- `movil/servidor_pruebas.sql`, `snapshot_postgresql.sql`: fixture mínima y vista del contrato móvil.
-- `docs/informe.pdf`: informe de TP8; fuente editable `docs/informe_tp8.md`.
-- `docs/kiro/`: cuatro requisitos EARS, diseño y tareas; [simulación documental del flujo Specs](docs/kiro/simulacion_kiro.md), reconstruida por Codex después de implementar.
-- `docs/evidencia_*.md`, `bitacora_ia.md`, `DUIA.md`, `defensa_tp8.md`: resultados, alcance y preparación de la defensa.
+- **Informe Técnico Integrador (Unidades 4 a 8):** [`docs/informe_segunda_entrega.md`](docs/informe_segunda_entrega.md) y [`docs/informe.pdf`](docs/informe.pdf).
+- **Bitácora de IA y DUIA consolidadas:** [`BITACORA.md`](BITACORA.md), [`docs/bitacora_ia.md`](docs/bitacora_ia.md) y [`docs/DUIA.md`](docs/DUIA.md).
+- **Especificaciones en Kiro (`.kiro/specs/`):**
+  - Unidad 4: [`.kiro/specs/fnbc-y-desnormalizacion/`](.kiro/specs/fnbc-y-desnormalizacion/)
+  - Unidad 5: [`.kiro/specs/roles-food-store/`](.kiro/specs/roles-food-store/) y [`.kiro/steering/security-policies.md`](.kiro/steering/security-policies.md)
+  - Unidad 6: [`.kiro/specs/mantenimiento-u6/`](.kiro/specs/mantenimiento-u6/) y [`SPEC_U6.md`](SPEC_U6.md)
+  - Unidad 8: [`.kiro/specs/movil-sqlite-sync/`](.kiro/specs/movil-sqlite-sync/) y [`docs/kiro/`](docs/kiro/)
 
-## 1. Requisitos y comprobación de versión
+| Unidad | Scripts y Objetos de Base de Datos | Documentación y Evidencias |
+|---|---|---|
+| **Unidad 4 · Normalización avanzada y redundancia** | • [`db/preparar_food_store.sql`](db/preparar_food_store.sql)<br>• [`db/tp_fnbc_control_lote.sql`](db/tp_fnbc_control_lote.sql) *(FNBC + transacción reversible + plan de reversión)*<br>• [`db/tp_desnormalizacion_top_categorias.sql`](db/tp_desnormalizacion_top_categorias.sql) *(tabla resumen + 5 triggers + auditoría)* | • [`docs/informe_unidad4_fnbc.md`](docs/informe_unidad4_fnbc.md) |
+| **Unidad 5 · Administración y seguridad** | • [`sql/roles.sql`](sql/roles.sql) *(mínimo privilegio)*<br>• [`sql/auditoria_test.sql`](sql/auditoria_test.sql)<br>• [`sql/simulacro_incidente.sql`](sql/simulacro_incidente.sql)<br>• [`sql/usuario_anon.sql`](sql/usuario_anon.sql) *(anonimización)* | • [`docs/informe_auditoria.md`](docs/informe_auditoria.md)<br>• [`docs/informe_incidente.md`](docs/informe_incidente.md)<br>• [`docs/verificacion_roles.txt`](docs/verificacion_roles.txt)<br>• [`docs/verificacion_equivalencia.md`](docs/verificacion_equivalencia.md)<br>• [`docs/log_auditoria_prueba.txt`](docs/log_auditoria_prueba.txt)<br>• [`docs/log_simulacro_anonimizado.txt`](docs/log_simulacro_anonimizado.txt) |
+| **Unidad 6 · Mantenimiento** | • [`db/backup_foodstore.ps1`](db/backup_foodstore.ps1)<br>• [`db/restore_test.ps1`](db/restore_test.ps1) *(simulacro contra reloj)*<br>• [`db/maintenance.sql`](db/maintenance.sql)<br>• [`db/health_check.sql`](db/health_check.sql) | • [`SPEC_U6.md`](SPEC_U6.md)<br>• [`docs/informe_u6.md`](docs/informe_u6.md) *(RTO = 3,52 s, RPO = ~24 min)* |
+| **Unidad 7 · NoSQL** | • [`sql/consultas_mongodb.js`](sql/consultas_mongodb.js) *(pedidos IDs 1–5 con `NumberDecimal`)*<br>• [`sql/consultas_postgresql.sql`](sql/consultas_postgresql.sql) | • [`docs/informe_nosql.md`](docs/informe_nosql.md) |
+| **Unidad 8 · Bases de datos móviles e integración** | • [`movil/schema_sqlite.sql`](movil/schema_sqlite.sql) *(tablas `STRICT`)*<br>• [`movil/cargar_cache.sql`](movil/cargar_cache.sql) *(conversión `t/f` y lápidas)*<br>• [`movil/semaforo.sql`](movil/semaforo.sql) *(rojo > amarillo > verde)*<br>• [`movil/pruebas_sqlite.sql`](movil/pruebas_sqlite.sql)<br>• [`movil/snapshot_postgresql.sql`](movil/snapshot_postgresql.sql) y [`movil/servidor_pruebas.sql`](movil/servidor_pruebas.sql)<br>• [`movil/pruebas_revision_postgresql.sql`](movil/pruebas_revision_postgresql.sql)<br>• [`movil/simulador.py`](movil/simulador.py) y [`movil/foodstore_movil.db`](movil/foodstore_movil.db)<br>• [`movil/tests/`](movil/tests/) *(25 tests automatizados)* | • [`docs/informe_tp8.md`](docs/informe_tp8.md)<br>• [`docs/evidencia_casos.md`](docs/evidencia_casos.md)<br>• [`docs/evidencia_postgresql.md`](docs/evidencia_postgresql.md)<br>• [`docs/evidencia_revision.md`](docs/evidencia_revision.md)<br>• [`docs/evidencia_tdd.md`](docs/evidencia_tdd.md)<br>• [`docs/defensa_tp8.md`](docs/defensa_tp8.md) |
 
-Python 3.10+ con SQLite **3.37+**. Alternativa manual: cliente sqlite3 3.37+ o DB Browser con ese motor. Para repetir las exportaciones, PostgreSQL 16+ y `psql` (se verificó con PostgreSQL 18).
+---
 
-Desde la raíz del repositorio:
+## 🚀 Reproducción Rápida por Unidad
+
+### 1. Unidades 4, 5 y 6 (PostgreSQL 18)
 
 ```powershell
+# Unidad 4: Preparar esquema base, FNBC (con plan de reversión) y desnormalización controlada
+psql -U postgres -d food_store -f db/preparar_food_store.sql
+psql -U postgres -d food_store -f db/tp_fnbc_control_lote.sql
+psql -U postgres -d food_store -f db/tp_desnormalizacion_top_categorias.sql
+
+# Unidad 5: Esquema de roles de mínimo privilegio, auditoría, simulacro de incidente y anonimización
+psql -U postgres -d food_store -f sql/roles.sql
+psql -U postgres -d food_store -f sql/auditoria_test.sql
+psql -U postgres -d food_store -f sql/simulacro_incidente.sql
+psql -U postgres -d food_store -f sql/usuario_anon.sql
+
+# Unidad 6: Respaldo programado, chequeo de salud, mantenimiento y simulacro de desastre contra reloj
+powershell -ExecutionPolicy Bypass -File db/backup_foodstore.ps1
+psql -U postgres -d food_store -f db/health_check.sql
+psql -U postgres -d food_store -f db/maintenance.sql
+powershell -ExecutionPolicy Bypass -File db/restore_test.ps1
+```
+
+### 2. Unidad 7 (MongoDB y comparación con PostgreSQL)
+
+```powershell
+# Cargar documentos embebidos (pedidos IDs 1 a 5 con NumberDecimal) y ejecutar consultas documentales
+mongosh --file sql/consultas_mongodb.js
+
+# Ejecutar consultas relacionales equivalentes acotadas a los pedidos 1 a 5
+psql -U postgres -d food_store -f sql/consultas_postgresql.sql
+```
+
+### 3. Unidad 8 (SQLite 3.37+, Simulación de Sincronización y Suite de 25 Pruebas)
+
+La tablet guarda borradores locales sin conexión; un estado `SIMULADO_APROBADO` indica coincidencia con la instantánea del servidor, **sin confirmar ventas ni descontar stock en PostgreSQL**.
+
+```powershell
+# Verificar versión de SQLite (3.37+) y ejecutar la suite completa de 25 tests automatizados (C1 a C7)
 python -c "import sqlite3; print(sqlite3.sqlite_version)"
 python -m unittest discover -s movil/tests -v
-```
 
-En Windows también se puede usar `py -3.10` en lugar de `python`. El `sqlite3.exe` encontrado en el PATH del entorno de preparación es 3.19.1: no soporta STRICT. Por eso la ejecución verificada usa el motor integrado de Python, sin depender de ese ejecutable.
-
-## 2. Crear SQLite desde cero y simular
-
-Los siguientes comandos usan únicamente archivos sintéticos, sin conexión PostgreSQL. El nombre de salida debe ser nuevo: el creador rechaza sobrescribir un archivo existente.
-
-```powershell
+# Crear una base SQLite demo desde cero y evaluar el semáforo (caso C5 -> SIMULADO_APROBADO)
 python movil/simulador.py --crear-demo movil/demo_nueva.db
 python movil/simulador.py --evaluar movil/demo_nueva.db
-python movil/simulador.py --evaluar movil/demo_nueva.db
-```
 
-La primera evaluación devuelve `SIMULADO_APROBADO`; repetirla conserva el estado. Para observar C2, crear otra base nueva y cargar el CSV de precio modificado antes de evaluarla:
-
-```powershell
+# Evaluar conflicto de precio (caso C2 -> CONFLICTO)
 python movil/simulador.py --crear-demo movil/demo_precio.db
 python movil/simulador.py --evaluar movil/demo_precio.db --snapshot movil/snapshots/c2_precio.csv
 ```
 
-Devuelve `CONFLICTO`. La prueba C2 muestra la aceptación actualizando el precio visto y creando una solicitud con otro UUID; no cambia PostgreSQL. Los casos completos C1–C7 y la aceptación están automatizados en `movil/tests/` y explicados en `docs/evidencia_casos.md`.
-
-## 3. Alternativa SQL manual
-
-Con **sqlite3 3.37+**, desde la raíz ejecutar `sqlite3 movil/manual_nueva.db` sobre un archivo nuevo y luego:
-
-```sql
-.bail on
-.read movil/schema_sqlite.sql
-.import --csv --skip 1 movil/servidor_snapshot.csv snapshot_servidor
-.read movil/cargar_cache.sql
-.bail off
-.read movil/pruebas_sqlite.sql
-.read movil/semaforo.sql
-SELECT solicitud_uuid,estado,motivo FROM cola_sync;
-PRAGMA integrity_check;
-PRAGMA foreign_key_check;
-```
-
-C7 produce dos errores **intencionales** de CHECK y FK, seguidos de ROLLBACK y conteo cero para los borradores inválidos. Por eso ese archivo requiere continuar tras los errores. El runner automatizado verifica que se producen exactamente las excepciones previstas y que no quedan filas nuevas; otros errores no deben darse por aprobados. `foreign_keys=ON` se necesita en cada conexión.
-
-Para importar otra instantánea completa, borrar primero las filas de `snapshot_servidor`, importar el nuevo CSV y ejecutar `cargar_cache.sql`; no borrar `producto_cache`, porque puede estar referenciado por borradores.
-
-## 4. Repetir la parte PostgreSQL
-
-La rama de referencia no incluye el esquema original completo: la entrega incorpora una **fixture mínima sintética**, compatible con los nombres usados por los scripts anteriores. No se afirma haber restaurado la base real del equipo.
-
-Usar una instancia PostgreSQL nueva y aislada. En los comandos siguientes `55438` es el puerto utilizado en la prueba documentada; debe corresponder a esa instancia de pruebas. No ejecutar estos archivos sobre bases existentes sin revisar destino.
-
-```powershell
-createdb -h 127.0.0.1 -p 55438 -U postgres food_store
-psql -h 127.0.0.1 -p 55438 -U postgres -d food_store -X -v ON_ERROR_STOP=1 -f movil/servidor_pruebas.sql -f movil/snapshot_postgresql.sql
-```
-
-En `psql`, desde la raíz:
-
-```sql
-\copy (SELECT * FROM tp8_servidor.v_snapshot_movil ORDER BY id) TO 'movil/servidor_snapshot.csv' CSV HEADER
-SELECT count(*) AS pedidos FROM tp8_servidor.pedido;
-SELECT id,precio,stock,activo FROM tp8_servidor.producto ORDER BY id;
-```
-
-Crear y evaluar una base SQLite nueva con ese CSV. Repetir las dos consultas PostgreSQL después: deben conservarse cantidad de pedidos, precio y stock. Las modificaciones de precio, stock y baja para preparar C2–C4 y sus exportaciones se detallan en `docs/evidencia_postgresql.md`. Son preparaciones deliberadas de escenarios, no acciones del móvil. Cada CSV anota la fecha UTC de copia. `activo=FALSE` se adapta como baja lógica y se exporta como lápida; la vista no filtra esa fila.
-
-Para repetir los probes de revisión sin modificar roles globales:
+Para ejecutar las pruebas del Code Review asistido por IA sobre una instancia PostgreSQL de pruebas:
 
 ```powershell
 psql -h 127.0.0.1 -p 55438 -U postgres -d food_store -X -v ON_ERROR_STOP=1 -f movil/pruebas_revision_postgresql.sql
 ```
-
-El esquema `tp8_servidor` se crea una sola vez: si ya existe, la fixture falla y no borra datos para continuar. Para otra ejecución completa usar otra instancia descartable.
-
-## 5. Alcance de revisión y trabajo personal
-
-La revisión TP8 detectó problemas en scripts históricos, entre ellos credenciales literales y autenticación de demostración que ignora la contraseña. **No ejecutar automáticamente los scripts de unidades anteriores**. Se conservaron como referencia y los hallazgos quedan documentados para una corrección separada; el paquete TP8 no necesita esos scripts para funcionar.
-
-La asistencia real fue **Codex**. Los archivos de especificación están preparados y se agregó una simulación documental posterior del flujo Specs; esta no equivale a una sesión real de Kiro ni de OpenCode Plan. Antes de entregar, el equipo debe realizar esos pasos pedidos por la consigna, revisar y reproducir los resultados, completar la DUIA oficial si tiene un formato obligatorio y efectuar la defensa personal. No se inventan firmas ni validaciones humanas.
-
-El ZIP de TP8 se puede entregar sin publicar el repositorio. La rama `sqlite` ya fue publicada por pedido del usuario; esta actualización documental debe publicarse por separado. No se creó una etiqueta `tp8` ni se realizó la entrega en campus.
-
-## Referencia anterior: Unidades 4–7
-
-La rama `NoSQL` incluye `sql/consultas_mongodb.js`, `sql/consultas_postgresql.sql`, `docs/informe_nosql.md` y `BITACORA.md`, además de los trabajos relacionales anteriores. Se conservan en el checkout con su historial; TP8 agrega archivos independientes.
